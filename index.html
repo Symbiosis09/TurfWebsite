@@ -1,0 +1,218 @@
+<head>
+	<title>ID Generator</title>
+	<script src="qrcode.min.js">
+	</script>
+	<link rel="stylesheet" href="style.css">
+	<style>
+		.stylee {
+			padding: 20px;
+			margin: 10px;
+			border-radius: 13px;
+			color: black;
+			font-weight: bolder;
+			letter-spacing: 0.4;
+			width: 100%;
+		}
+
+		.input {
+			font-size: larger;
+			font-weight: bolder;
+		}
+
+		.bold {
+			font-weight: b;
+		}
+		span {
+			align-items: center;
+			/* margin-bottom: 20px; */
+			position: relative;
+			/* padding: 10%; */
+			top: 10px;
+
+		}
+		#qrcode{
+			
+			align-items: center;
+			/*margin-left: 72px;*/
+		}
+	
+		.click-photo{
+			position: relative;
+			left: 30%;
+		}
+	</style>
+</head>
+<div id="pagess">
+<p style="display: none;"><span id="datedis"></span></p>
+
+<p><img src="./BTCUP1.png" alt="" style="height: 200px;width:800px;margin-bottom: -400px;">  </p>
+
+
+<input type="text" id="dateoftoday" style="font-size: 70px;font-weight: bolder;margin-top: 170px;width: 781.2px; position: relative;left: 10%; border: none;" > <br> <br>
+
+<div id="alin">
+
+	<input type="text" id="value" style="display: none;"> <br><br>
+
+	<video id="video" width="520" height="420" autoplay style="width: 500px; position: relative; left: 25%; top: -60px; "></video> 
+
+	<div>
+
+		<br>
+		<canvas id="canvas" width="620" height="620" style="border-radius: 18%;position:relative;margin-left: 100px; display: none; margin-top: -42px;" ></canvas>
+	</div> <br> <br>
+
+
+
+	<div id="qrcode" style="position: relative; left: 32% ; margin-left: 35px; bottom: 0px;"> </div> 
+	
+</div>
+</div>
+
+<div style="position: relative;left:70%;top:-15%;width: 500px;">
+	<button id="print" onclick="printdd()" style="display: none;">print</button>
+
+
+
+	<button id="start-camera" style="display: none;">Start Camera</button>
+	<button id="click-photo" class="stylee">CLICK PHOTO</button> <br>
+
+	<button id="ppp" class="stylee" onclick="printt()">PRINT USER PASS</button><br>
+
+</div>
+
+
+
+
+<script>
+
+
+	let camera_button = document.querySelector("#start-camera");
+	let video = document.querySelector("#video");
+	let click_button = document.querySelector("#click-photo");
+
+
+
+	let canvas = document.querySelector("#canvas");
+
+	
+
+
+	window.onload = async function () {
+		// format - mondateyeartimesec
+
+		var date = new Date();
+		var month = date.getMonth();
+		var day = date.getDate();
+		var year = date.getFullYear();
+		var hour = date.getHours();
+
+		var minute = String(date.getMinutes()).padStart(2, '0');
+
+		var sec = String(date.getSeconds()).padStart(2, '0');
+
+
+		var finalformat = "A/" + year + "/" + hour + "/" + month + "/" + day + "/" + minute + "/" + sec;
+		var final = day + "/" + month + "/" + year + "  " + hour + ":" + minute + ":" + sec;
+
+		// console.log(finalformat);
+
+
+		document.getElementById("value").value = finalformat;
+		document.getElementById("dateoftoday").value = final;
+
+
+		let stream = await navigator.mediaDevices.getUserMedia({ video: {
+		    facingMode:'environment'
+		}, audio: false });
+		video.srcObject = stream;
+
+	}
+
+
+
+	click_button.addEventListener('click', function () {
+
+		canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+		let image_data_url = canvas.toDataURL('image/jpeg');
+
+		// data url of the image
+		// console.log(image_data_url);
+		var canvass = document.getElementById("canvas").innerHTML;
+		document.getElementById("qrcode").innerHTML = " ";
+		var valueofd = document.getElementById("value").value;
+		var itsme = valueofd;
+		var qrcode = new QRCode("qrcode",
+			itsme);
+		document.getElementById("video").style.display = "none";
+		document.getElementById("canvas").style.display = "block";
+
+		document.getElementById("value").value = " ";
+
+		// console.log(canvass);
+		// window.print(canvass)
+	});
+
+	function printt() {
+		document.getElementById("video").style.display = "none";
+		document.getElementById("datedis").style.display = "none";
+
+		document.getElementById("print").style.display = "none";
+
+		document.getElementById("start-camera").style.display = "none";
+
+		document.getElementById("click-photo").style.display = "none";
+		document.getElementById("value").style.display = "none";
+		document.getElementById("ppp").style.display = "none";
+		// document.getElementById("checkin").style.display = "none";
+		// document.getElementById("checkout").style.display = "none";
+
+
+		// var ToPrint = document.getElementById("qrcode").innerHTML;
+		//     var bodyconetnts = document.body.innerHTML;
+		//     document.body.innerHTML = ToPrint;
+		window.print();
+
+		setInterval(window.location.reload(), 4000);
+		window.location.reload();
+		// document.body.innerHTML = bodyconetnts;
+		// window.print();
+	}
+
+	// function play(){
+	//         document.getElementById("qrcode").innerHTML = " ";
+	//         var valueofd = document.getElementById("value").value;
+	//         var itsme = valueofd;
+	// 		var qrcode = new QRCode("qrcode",
+	// 		itsme);
+	//         document.getElementById("value").value = " ";
+
+	//         // window.print(qrcode); 
+
+	//         }
+
+	// function printdd(){
+	//     var ToPrint = document.getElementById("qrcode").innerHTML;
+	// var bodyconetnts = document.body.innerHTML;
+	// document.body.innerHTML = ToPrint;
+	// window.print();
+	//     document.body.innerHTML = bodyconetnts;
+	// }
+
+	// function Dated(){
+	//     var date = new Date();
+	// document.getElementById("datedis").innerHTML = date;
+	// }
+
+	setInterval(() => {
+		var date = new Date();
+		document.getElementById("datedis").innerHTML = date;
+	}, 1000);
+	
+// 	 setInterval(() => {
+//         window.location.reload();
+//     },5000);
+
+
+
+</script>
